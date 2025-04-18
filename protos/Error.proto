@@ -1,0 +1,9 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "MyPackage.Messages";
+
+package MyPackage.Messages;
+
+message Error{
+    string details = 1;
+}

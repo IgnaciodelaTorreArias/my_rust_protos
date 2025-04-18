@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "MyPackage.Messages";
+
+package MyPackage.Messages;
+
+message PersonParams{
+    string name = 1;
+    uint32 age = 2;
+}

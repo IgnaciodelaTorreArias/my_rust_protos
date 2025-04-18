@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+import "Error.proto";
+import "Response.proto";
+import "Greetings.proto";
+import "Person.proto";

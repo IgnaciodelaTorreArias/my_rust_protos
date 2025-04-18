@@ -1,0 +1,19 @@
+[package]
+name = "my_rust_protos"
+version = "0.1.0"
+edition = "2024"
+authors = [ "Ignacio de la Torre <ignaciodlta@gmail.com>" ]
+description = "Exporting Rust Functions via C ABI with Protobuf-based Arguments and Results"
+readme = "README.md"
+license = "Apache-2.0"
+keywords = ["ffi", "C ABI", "Protobuf", "dynamic library"]
+categories = ["api-bindings", ""]
+
+[dependencies]
+prost = "0.13.5"
+
+[build-dependencies]
+prost-build = "0.13.5"
+
+[lib]
+crate-type = ["cdylib"]
