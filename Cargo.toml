@@ -7,7 +7,6 @@ description = "Exporting Rust Functions via C ABI with Protobuf-based Arguments 
 readme = "README.md"
 license = "Apache-2.0"
 keywords = ["ffi", "C ABI", "Protobuf", "dynamic library"]
-categories = ["api-bindings", ""]
 
 [dependencies]
 prost = "0.13.5"
