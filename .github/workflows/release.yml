@@ -31,14 +31,13 @@ jobs:
       - name: cache cargo build
         uses: actions/cache@v4
         with:
-          path: tokenizers_proto/target
+          path: target
           key: ${{ runner.os }}-cargo-target-${{ matrix.runtime }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-target-${{ matrix.runtime }}
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
       - name: install protoc
-        if: steps.cache-protoc.outputs.cache-hit != 'true'
         run: |
           $PROTOC_ZIP = "protoc-${{ env.PROTOC_VERSION }}-win64.zip"
           Invoke-WebRequest -Uri "https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.PROTOC_VERSION }}/$PROTOC_ZIP" -OutFile $PROTOC_ZIP
@@ -46,12 +45,12 @@ jobs:
       - name: update path
         run: Add-Content $env:GITHUB_PATH "$HOME\.protoc\bin"
       - name: build rust .dll
-        run: cargo build --manifest-path .\tokenizers_proto\Cargo.toml --release --target ${{ matrix.target }}
+        run: cargo build --manifest-path .\Cargo.toml --release --target ${{ matrix.target }}
       - name: upload .dll
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.runtime }}
-          path: .\tokenizers_proto\target\${{ matrix.target }}\release\tokenizers_proto.dll
+          path: .\target\${{ matrix.target }}\release\my_rust_protos.dll
 
   build-linux:
     runs-on: ubuntu-latest
@@ -78,7 +77,7 @@ jobs:
       - name: cache cargo build
         uses: actions/cache@v4
         with:
-          path: tokenizers_proto/target
+          path: target
           key: ${{ runner.os }}-cargo-target-${{ matrix.runtime }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-target-${{ matrix.runtime }}
       - name: install packages
@@ -86,7 +85,6 @@ jobs:
           sudo apt update
           sudo apt install -y clang unzip gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
       - name: install protoc
-        if: steps.cache-protoc.outputs.cache-hit != 'true'
         run: |
           PROTOC_ZIP="protoc-${{ env.PROTOC_VERSION }}-linux-x86_64.zip"
           curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.PROTOC_VERSION }}/$PROTOC_ZIP"
@@ -97,12 +95,12 @@ jobs:
         with:
           targets: ${{ matrix.target }}
       - name: build rust .so
-        run: ${{ matrix.flags }} cargo build --manifest-path tokenizers_proto/Cargo.toml --release --target ${{ matrix.target }}
+        run: ${{ matrix.flags }} cargo build --manifest-path Cargo.toml --release --target ${{ matrix.target }}
       - name: upload .so
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.runtime }}
-          path: tokenizers_proto/target/${{ matrix.target }}/release/libtokenizers_proto.so
+          path: target/${{ matrix.target }}/release/libmy_rust_protos.so
 
   build-osx:
     runs-on: macos-latest
@@ -127,14 +125,13 @@ jobs:
       - name: cache cargo build
         uses: actions/cache@v4
         with:
-          path: tokenizers_proto/target
+          path: target
           key: ${{ runner.os }}-cargo-target-${{ matrix.runtime }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-target-${{ matrix.runtime }}
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
       - name: install protoc
-        if: steps.cache-protoc.outputs.cache-hit != 'true'
         run: |
           PROTOC_ZIP="protoc-${{ env.PROTOC_VERSION }}-osx-aarch_64.zip"
           curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.PROTOC_VERSION }}/$PROTOC_ZIP"
@@ -142,9 +139,9 @@ jobs:
       - name: update path
         run: echo "$HOME/.protoc/bin" >> $GITHUB_PATH
       - name: build rust .dylib
-        run: cargo build --manifest-path tokenizers_proto/Cargo.toml --release --target ${{ matrix.target }}
+        run: cargo build --manifest-path Cargo.toml --release --target ${{ matrix.target }}
       - name: upload .dylib
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.runtime }}
-          path: tokenizers_proto/target/${{ matrix.target }}/release/libtokenizers_proto.dylib
+          path: target/${{ matrix.target }}/release/libmy_rust_protos.dylib
