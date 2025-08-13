@@ -12,16 +12,9 @@
 //! 1. **Standalone Functions**: Simple functions that are not associated with any struct.
 //! 2. **Method Functions**: Methods of structs that are exported as C ABI-compatible functions.
 //!
-//! Both types of functions **must** return an `i32` as the status code:
-//!
-//! - `0`: Success
-//! - `-1`: Result unavailable (e.g., unable to pass or decode results)
-//! - `-2`, `-3`: Invalid arguments
-//! - `-5`: Invalid instance pointer
-//!
-//! ### Extended Error Details
-//!
-//! For even negative values, additional error details may be available. The specifics of how the details are passed will be explained later.
+//! Both types of functions **must** return an `i32` as the status code, see protos/error.proto CallStatus enum for details.
+//! CallStatus with negative values represent "primitive" errors (that don't need a detailed explanation)
+//! Positive numbers represent errors that give details of what failed. The specifics of how the details are passed will be explained later.
 //!
 //! ## Passing Arguments and Retrieving Results with Protobufs
 //!
@@ -72,7 +65,9 @@
 //!
 //! - **Pros**: Safer, as Rust handles memory management.
 //!
-//! - **Cons**: More overhead due to the need to create the struct instance for every method call.
+//! - **Cons**:
+//!     - More overhead due to the need to create the struct instance for every method call.
+//!     - No retention of state between calls, as each call creates a new instance.
 //!
 //! ### Strategy 2: Managing a Pointer to the Struct Instance
 //!
@@ -111,10 +106,9 @@
 //! - **Memory Allocation**: When working with pointers and heap-allocated structs, be cautious of memory leaks. Ensure that any struct allocated on the heap is explicitly freed after use using the corresponding `free_*` function.
 //!
 //! - **Data Integrity**: Ensure that any data passed to Rust (or vice versa) remains valid and is not modified/moved or freed prematurely during function calls.
-
-mod instances;
+mod general_utils;
 mod messages;
 
 pub mod greet;
 pub mod person;
-pub mod utils;
+pub mod buffer_utils;

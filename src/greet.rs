@@ -1,5 +1,5 @@
-use crate::messages::my_package::{Greetings, Response};
-use crate::utils::*;
+use crate::messages::{Greetings, Response, CallStatus};
+use crate::buffer_utils::*;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn rust_protos_greet(
@@ -10,19 +10,17 @@ pub extern "C" fn rust_protos_greet(
 ) -> i32 {
     let greetings = match get_call_message::<Greetings>(ptr, len) {
         Ok(m) => m,
-        Err(err) => {
-            if set_call_result(&err, out_ptr, out_len) {
-                return -2;
-            } else {
-                return -3;
-            }
+        Err(_) => {
+            crate::set_empty_output!(out_ptr, out_len);
+            return CallStatus::DecodeError.into();
         }
     };
-    let response = Response {
-        text: format!("Hello {}, have a good day!!!", greetings.name),
-    };
-    if !set_call_result(&response, out_ptr, out_len) {
-        return -1;
-    };
-    0
+    set_call_result(
+        Response {
+            text: format!("Hello {}, have a good day!!!", greetings.name),
+        },
+        out_ptr,
+        out_len
+    );
+    CallStatus::Ok.into()
 }

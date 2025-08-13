@@ -9,10 +9,10 @@ license = "Apache-2.0"
 keywords = ["ffi", "C ABI", "Protobuf", "dynamic library"]
 
 [dependencies]
-prost = "0.13.5"
+prost = "0.14.1"
 
 [build-dependencies]
-prost-build = "0.13.5"
+prost-build = "0.14.1"
 
 [lib]
 crate-type = ["cdylib"]

@@ -4,6 +4,15 @@ option csharp_namespace = "MyPackage.Messages";
 
 package MyPackage.Messages;
 
+enum CallStatus {
+    OK = 0;
+    DECODE_ERROR = -1;
+    INVALID_ARGUMENTS_DETAILS = 2;
+    INVALID_ARGUMENTS = -2;
+    UNKNOWN_ENUM_VALUE = -3;
+    EMPTY_PARAMS = -4;
+}
+
 message Error{
     string details = 1;
 }

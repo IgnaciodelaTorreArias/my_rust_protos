@@ -1,9 +1,5 @@
-use std::os::raw::c_void;
-
-use crate::messages::my_package::{Greetings, PersonParams, Response};
-use crate::utils::*;
-
-use crate::instances::*;
+use crate::messages::{CallStatus, Greetings, PersonParams, Response};
+use crate::buffer_utils::*;
 
 pub struct Person {
     pub name: String,
@@ -24,22 +20,25 @@ impl Person {
 /// `person_ptr` will be set to point to a `Person` struct on the heap, caller must manually free memory using  the `free_person` function.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn create_new_person(
-    person_ptr: *mut *mut Person,
+    instance_ptr: *mut *mut Person,
     ptr: *const u8,
     len: usize,
 ) -> i32 {
     let person = match get_call_message::<PersonParams>(ptr, len) {
         Ok(m) => m,
-        Err(_) => return -3,
+        Err(_) => return CallStatus::DecodeError.into(),
     };
     let person = Box::new(Person {
         name: person.name,
         age: person.age as u8,
     });
     let res_ptr = Box::into_raw(person);
-    register_instance(res_ptr as *mut c_void);
     unsafe {
-        *person_ptr = res_ptr;
+        println!(
+            "RUST: create_new_person called with, res_ptr: {:?}",
+            res_ptr
+        );
+        *instance_ptr = res_ptr;
     }
     0
 }
@@ -57,27 +56,26 @@ pub unsafe extern "C" fn person_greet(
     out_ptr: *mut *mut u8,
     out_len: *mut usize,
 ) -> i32 {
-    if !instance_exists(instance_ptr as *mut c_void) {
-        return -5;
-    }
+    println!(
+        "RUST: person_greet called with instance_ptr: {:?}",
+        instance_ptr
+    );
     let person = unsafe { &mut *instance_ptr };
     let res = match get_call_message::<Greetings>(ptr, len) {
         Ok(msg) => msg,
-        Err(err) => {
-            if set_call_result(&err, out_ptr, out_len) {
-                return -2;
-            } else {
-                return -3;
-            }
+        Err(_) => {
+            crate::set_empty_output!(out_ptr, out_len);
+            return CallStatus::DecodeError.into();
         }
     };
-    let response = Response {
-        text: person.greet(&res.name),
-    };
-    if !set_call_result(&response, out_ptr, out_len) {
-        return -1;
-    }
-    0
+    set_call_result(
+        Response {
+            text: person.greet(&res.name),
+        },
+        out_ptr,
+        out_len
+    );
+    CallStatus::Ok.into()
 }
 
 /// # Safety
@@ -85,9 +83,6 @@ pub unsafe extern "C" fn person_greet(
 /// `ptr` must be an address provided by the function `create_new_person`
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn free_person(ptr: *mut Person) {
-    if !instance_exists(ptr as *mut c_void) {
-        return;
-    }
     unsafe {
         drop(Box::from_raw(ptr));
     }
