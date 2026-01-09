@@ -14,5 +14,12 @@ prost = "0.14.1"
 [build-dependencies]
 prost-build = "0.14.1"
 
+[target.'cfg(windows).build-dependencies']
+tauri-winres = "0.3.3"
+
 [lib]
 crate-type = ["cdylib"]
+
+[profile.release]
+strip = "symbols"
+lto = true
