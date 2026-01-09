@@ -3,7 +3,7 @@ fn main() -> Result<()> {
     prost_build::compile_protos(&["protos/module.proto"], &["protos/"])?;
     #[cfg(target_os = "windows")]
     {
-        let mut res = tauri_winres::WindowsResourse::new();
+        let mut res = tauri_winres::WindowsResource::new();
         res.compile()?;
     }
     Ok(())

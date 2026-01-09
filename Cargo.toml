@@ -1,6 +1,6 @@
 [package]
 name = "my_rust_protos"
-version = "0.1.0"
+version = "1.1.1"
 edition = "2024"
 authors = [ "Ignacio de la Torre <ignaciodlta@gmail.com>" ]
 description = "Exporting Rust Functions via C ABI with Protobuf-based Arguments and Results"
@@ -14,7 +14,7 @@ prost = "0.14.1"
 [build-dependencies]
 prost-build = "0.14.1"
 
-[target.'cfg(windows).build-dependencies']
+[target.'cfg(windows)'.build-dependencies]
 tauri-winres = "0.3.3"
 
 [lib]
