@@ -1,1 +1,1 @@
-include!(concat!(env!("OUT_DIR"), "/my_package.messages.rs"));
+include!(concat!(env!("OUT_DIR"), "/lib.greet.v1.rs"));

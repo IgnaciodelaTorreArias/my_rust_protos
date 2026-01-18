@@ -1,6 +1,6 @@
 [package]
 name = "my_rust_protos"
-version = "1.1.2"
+version = "1.2.0"
 edition = "2024"
 authors = [ "Ignacio de la Torre <ignaciodlta@gmail.com>" ]
 description = "Exporting Rust Functions via C ABI with Protobuf-based Arguments and Results"
@@ -9,10 +9,11 @@ license = "Apache-2.0"
 keywords = ["ffi", "C ABI", "Protobuf", "dynamic library"]
 
 [dependencies]
-prost = "0.14.1"
+prost = "0.14.3"
 
 [build-dependencies]
-prost-build = "0.14.1"
+prost-build = "0.14.3"
+cbindgen = "0.29.2"
 
 [target.'cfg(windows)'.build-dependencies]
 tauri-winres = "0.3.3"

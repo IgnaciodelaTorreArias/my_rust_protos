@@ -2,7 +2,7 @@ use crate::messages::{Greetings, Response, CallStatus};
 use crate::buffer_utils::*;
 
 #[unsafe(no_mangle)]
-pub extern "C" fn rust_protos_greet(
+pub extern "C" fn lib_greet_greet(
     ptr: *const u8,
     len: usize,
     out_ptr: *mut *mut u8,

@@ -19,7 +19,7 @@ impl Person {
 /// Caller must ensure `person_ptr` is valid.
 /// `person_ptr` will be set to point to a `Person` struct on the heap, caller must manually free memory using  the `free_person` function.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn create_new_person(
+pub unsafe extern "C" fn lib_greet_create_new_person(
     instance_ptr: *mut *mut Person,
     ptr: *const u8,
     len: usize,
@@ -40,7 +40,7 @@ pub unsafe extern "C" fn create_new_person(
         );
         *instance_ptr = res_ptr;
     }
-    0
+    CallStatus::Ok.into()
 }
 
 /// # Safety
@@ -49,7 +49,7 @@ pub unsafe extern "C" fn create_new_person(
 /// Caller must ensure `out_ptr` and `out_len` are valid.
 /// The `out_ptr` and `out_len` will set the information needed to read a bytes buffer containing an encoded `Response` proto message.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn person_greet(
+pub unsafe extern "C" fn lib_greet_person_greet(
     instance_ptr: *mut Person,
     ptr: *const u8,
     len: usize,
@@ -82,7 +82,7 @@ pub unsafe extern "C" fn person_greet(
 /// Caller must ensure there are no other references to the structure.
 /// `ptr` must be an address provided by the function `create_new_person`
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn free_person(ptr: *mut Person) {
+pub unsafe extern "C" fn lib_greet_free_person(ptr: *mut Person) {
     unsafe {
         drop(Box::from_raw(ptr));
     }
