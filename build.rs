@@ -13,9 +13,16 @@ fn main() -> Result<()> {
     #[cfg(debug_assertions)]
     {
         let crate_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
-        cbindgen::generate(crate_dir)
-            .expect("Unable to generate bindings")
-            .write_to_file("my_rust_protos.h");
+        let header_path = Path::new(&crate_dir).join("my_rust_protos.h");
+        
+        if !header_path.exists() {
+            cbindgen::generate(crate_dir)
+                .expect("Unable to generate bindings")
+                .write_to_file("my_rust_protos.h");
+            println!("Generated my_rust_protos.h");
+        } else {
+            println!("Skipping cbindgen (my_rust_protos.h already exists)");
+        }
     }
     
     Ok(())

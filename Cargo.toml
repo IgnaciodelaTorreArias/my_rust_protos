@@ -19,7 +19,7 @@ cbindgen = "0.29.2"
 tauri-winres = "0.3.3"
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "staticlib"]
 
 [profile.release]
 strip = "symbols"
