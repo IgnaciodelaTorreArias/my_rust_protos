@@ -56,7 +56,7 @@ jobs:
             .\target\${{ matrix.target }}\release\*.dll
             .\target\${{ matrix.target }}\release\*.lib
   build-windows-gnu:
-    runs-on: windows-
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
