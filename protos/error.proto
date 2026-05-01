@@ -1,7 +1,7 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
 option csharp_namespace = "Lib.Greet.V1";
-option java_package = "io.github.ignaciodelatorrearias.lib.greet.v1";
+option java_package = "io.github.ignaciodelatorrearias.greet.types";
 
 package lib.greet.v1;
 

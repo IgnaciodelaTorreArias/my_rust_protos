@@ -2,6 +2,7 @@
 extern crate cbindgen;
 #[cfg(debug_assertions)]
 use std::env;
+use std::path::Path;
 use std::io::Result;
 fn main() -> Result<()> {
     prost_build::compile_protos(&["protos/module.proto"], &["protos/"])?;

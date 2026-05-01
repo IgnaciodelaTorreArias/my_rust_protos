@@ -44,5 +44,6 @@ pub(crate) fn set_call_result<T: prost::Message>(
 /// With the same address and len the output was pointed to.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn lib_greet_free_buffer(ptr: *mut u8, len: usize) {
+    println!("RUST: free_buffer called with ptr: {:?}, len: {}", ptr, len);
     unsafe { Vec::from_raw_parts(ptr, len, len) };
 }
